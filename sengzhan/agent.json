@@ -1,0 +1,7 @@
+{
+    "name": "sengzhan",
+    "agent_class": "sengzhan_agent.GomokuAgent", 
+    "author": "sengzhangan.2024@mitb.smu.edu.sg",
+    "description": "Seng Zhan's agent",
+    "version": "1.0.0"
+}

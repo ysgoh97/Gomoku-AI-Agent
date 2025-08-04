@@ -1,0 +1,7 @@
+{
+    "name": "mochen",
+    "agent_class": "mochen_test.GomokuAgent", 
+    "author": "mochenhuang.2024@mitb.smu.edu.sg",
+    "description": "Mochen's agent",
+    "version": "1.0.0"
+}
