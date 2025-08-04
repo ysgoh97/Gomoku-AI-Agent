@@ -1,0 +1,7 @@
+{
+    "name": "Gomoku Agent",
+    "agent_class": "gomoku_agent.GomokuAgent", 
+    "author": "mochenhuang.2024; sengzhangan.2024; yunsi.goh.2024",
+    "description": "A prompt-based LLM-powered agent that plays the game of Gomoku on a 8x8 board.",
+    "version": "1.0.0"
+}
