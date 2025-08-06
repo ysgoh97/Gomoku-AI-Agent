@@ -7,7 +7,7 @@ from gomoku.core.models import Player
 
 class GomokuAgent(Agent):
     """
-    A prompt-based LLM-powered agent that plays the game of Gomoku on a 8x8 board.
+    A Gomoku AI agent that uses a language model to make strategic moves.
     Inherits from the base Agent class provided by the Gomoku framework.
     """
 
@@ -17,7 +17,7 @@ class GomokuAgent(Agent):
         This method is called once when the agent is created.
         """
         # Create an OpenAI-compatible client using the Gemma2 model for move generation
-        self.llm = OpenAIGomokuClient(model="gemma2-9b-it")
+        self.llm = OpenAIGomokuClient(model="gemma-2-9b-it")
 
     async def get_move(self, game_state):
         """
