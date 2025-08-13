@@ -15,6 +15,7 @@ class GoGomoku(Agent):
     # Setup agent
     def _setup(self):
         print("⚙️  Setting up LLM agent...")
+        # TODO: try other models
         self.llm_client = OpenAIGomokuClient(model="gemma-2-9b-it")
         self.move_history = []
         self.invalid_moves = 0
@@ -45,12 +46,12 @@ class GoGomoku(Agent):
                         analysis['to_defend'].append((row, col))
 
                     # Get list of moves to defuse (prevent opponent from winning in the next 2 turns)
-                    # TODO: check for ._xxx.  .xx_x. instead of .xxx.
+                    # TODO: Threats should be ._xxx.  .xx_x. instead of .xxx.
                     if (self._check_lines(game_state, row, col, opponent, 4) and
                         self._check_open(game_state, row, col)):
                         analysis['to_defuse'].append((row, col))
 
-                    # TODO: get attack moves (e.g. creating forks)?
+                    # TODO: get attack moves, e.g. forks opportunities
 
         return analysis
 
@@ -131,7 +132,7 @@ class GoGomoku(Agent):
             opponent = (Player.WHITE if self.player == Player.BLACK else Player.BLACK).value
 
             # If critical moves exist, perform those first
-            # TODO: sort by number of surrounding pieces too?
+            # TODO: rank moves by number of surrounding pieces
             analysis = self._get_critical_moves(game_state)
             if analysis['to_win']:
                 print(f"🏆 Win at: {analysis['to_win']}")

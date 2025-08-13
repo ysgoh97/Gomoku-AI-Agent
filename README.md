@@ -14,6 +14,12 @@ The AI agent will:
 - `agent.json` - Agent configuration file
 - `gomoku_agent.py` - Main agent implementation
 
+## TODO
+- Try other models
+- Threats should be ._xxx.  .xx_x. instead of .xxx.
+- Get attack move, e.g. forks opportunities 
+- Rank moves by number of surrounding pieces 
+
 ## Contributors
 - [momo419685](https://github.com/momo419685) - mochenhuang.2024@mitb.smu.edu.sg
 - [szgan001](https://github.com/szgan001) - sengzhangan.20244@mitb.smu.edu.sg
