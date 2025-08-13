@@ -1,87 +1,248 @@
 import re
 import json
-from gomoku import Agent
-from gomoku.llm import OpenAIGomokuClient
-from gomoku.core.models import Player
+from typing import Tuple, List, Dict, Optional
+from gomoku.agents.base import Agent
+from gomoku.core.models import GameState, Player
+from gomoku.llm.openai_client import OpenAIGomokuClient
 
+class GoGomoku(Agent):
 
-class GomokuAgent(Agent):
-    """
-    A Gomoku AI agent that uses a language model to make strategic moves.
-    Inherits from the base Agent class provided by the Gomoku framework.
-    """
+    # Initialize agent
+    # def __init__(self, agent_id: str):
+    #     super().__init__(agent_id)
+    #     print(f"🎓 Created: {agent_id}")
 
+    # Setup agent
     def _setup(self):
-        """
-        Initialize the agent by setting up the language model client.
-        This method is called once when the agent is created.
-        """
-        # Create an OpenAI-compatible client using the Gemma2 model for move generation
-        self.llm = OpenAIGomokuClient(model="gemma-2-9b-it")
+        print("⚙️  Setting up LLM agent...")
+        self.llm_client = OpenAIGomokuClient(model="gemma-2-9b-it")
+        self.move_history = []
+        self.invalid_moves = 0
+        print("✅ Agent setup complete!")
 
-    async def get_move(self, game_state):
-        """
-        Generate the next move for the current game state using an LLM.
-
-        Args:
-            game_state: Current state of the Gomoku game board
-
-        Returns:
-            tuple: (row, col) coordinates of the chosen move
-        """
-        # Get the current player's symbol (e.g., 'X' or 'O')
-        player = self.player.value
-
-        # Determine the opponent's symbol by checking which player we are
-        rival = (Player.WHITE if self.player == Player.BLACK else Player.BLACK).value
-
-        # Convert the game board to a human-readable string format
-        board_str = game_state.format_board("standard")
+    # Get winning moves, and oppoenent's winning moves and threats
+    def _get_critical_moves(self, game_state: GameState) -> Dict:
         board_size = game_state.board_size
+        player = self.player.value
+        opponent = (Player.WHITE if self.player == Player.BLACK else Player.BLACK).value
 
-        # Prepare the conversation messages for the language model
-        messages = """
-You are an expert Gomoku (Five-in-a-Row) player. Your goal is to get 5 of your pieces
-in a row (horizontally, vertically, or diagonally) while preventing your opponent from doing the same.
+        analysis = {
+            'to_win': [],
+            'to_defend': [],
+            'to_defuse': []
+        }
 
-Strategic priorities:
-1. WIN: If you can make 5 in a row, do it immediately. 
-2. BLOCK: If opponent can make 5 in a row, block them immediately
-3. CREATE THREATS: Build sequences of 2-3 pieces to create multiple winning opportunities
-4. CONTROL CENTER: The center area is most valuable for creating multiple directions
-5. CREATE FORKS: Try to create situations where you have multiple ways to win
+        for row in range(board_size):
+            for col in range(board_size):
+                if game_state.board[row][col] == '.':
 
-Plan to win: Prioritize playing near the center of the board (rows/cols 7–11). If you can make 4 in a row with an open end, play that move. Try to make 3 in a row with both ends open (Live Three).
+                    # Get list of moves to win
+                    if self._check_lines(game_state, row, col, player, 5):
+                        analysis['to_win'].append((row, col))
 
-Important: If the opponent has 4 in a row with an open end, block it. 
+                    # Get list of moves to defend (prevent opponent from winning in the next turn)
+                    if self._check_lines(game_state, row, col, opponent, 5):
+                        analysis['to_defend'].append((row, col))
 
-You must respond with valid JSON in this exact format:
-{
-    "reasoning": "Brief explanation of your strategic thinking",
-    "row": <row_number>,
-    "col": <col_number>
-}
+                    # Get list of moves to defuse (prevent opponent from winning in the next 2 turns)
+                    if (self._check_lines(game_state, row, col, opponent, 4) and
+                        self._check_open(game_state, row, col)):
+                        analysis['to_defuse'].append((row, col))
 
-The row and col must be valid coordinates (0-indexed). Choose only empty positions marked with '.'.
-"""
+        return analysis
 
-        # Send the messages to the language model and get the response
-        content = await self.llm.complete(messages)
+    # Check consecutive pieces
+    def _check_lines(self, game_state: GameState, row: int, col: int, player: str, max_count: int) -> bool:
+        board_size = game_state.board_size
+        directions = [(0,1), (1,0), (1,1), (1,-1)]
 
-        # Parse the LLM response to extract move coordinates
+        for dr, dc in directions:
+            count = 1
+            open = 0
+
+            # Count in positive direction
+            r, c = row + dr, col + dc
+            while (0 <= r < board_size and
+                   0 <= c < board_size and
+                   game_state.board[r][c] == player):
+                count += 1
+                r, c = r + dr, c + dc
+
+            # Count in negative direction
+            r, c = row - dr, col - dc
+            while (0 <= r < board_size and
+                   0 <= c < board_size and
+                   game_state.board[r][c] == player):
+                count += 1
+                r, c = r - dr, c - dc
+
+            if count >= max_count:
+                return True
+        return False
+
+    # Check open ends
+    def _check_open(self, game_state: GameState, row: int, col: int) -> bool:
+        board_size = game_state.board_size
+        directions = [(0,1), (1,0), (1,1), (1,-1)]
+
+        for dr, dc in directions:
+            open = 0
+
+            # Check in positive direction
+            r, c = row + dr, col + dc
+            if (0 <= r < board_size and
+                0 <= c < board_size and
+                game_state.board[r][c] == "."):
+                open += 1
+
+            # Count in negative direction
+            r, c = row - dr, col - dc
+            if (0 <= r < board_size and
+                0 <= c < board_size and
+                game_state.board[r][c] == "."):
+                open += 1
+
+            if open == 2:
+                return True
+        return False
+
+    # Sort moves by distance to center
+    def _sort_center(self, move_list: List, game_state: GameState):
+        n = game_state.board_size
+        center = n // 2
+        if move_list:
+            cx, cy = center, center
+            def dist2(move):
+                r, c = move
+                dr, dc = r - cx, c - cy
+                return dr * dr + dc * dc
+            move_list.sort(key=dist2)
+        return move_list
+
+    async def get_move(self, game_state: GameState) -> Tuple[int, int]:
+        print(f"\n🧠 {self.agent_id} is thinking...")
+
         try:
-            # Use regex to find JSON-like content in the response
-            if m := re.search(r"{[^}]+}", content, re.DOTALL):
-                # Parse the JSON to extract row and column
-                move = json.loads(m.group(0))
-                row, col = (move["row"], move["col"])
+            board_size = game_state.board_size
+            player = self.player.value
+            opponent = (Player.WHITE if self.player == Player.BLACK else Player.BLACK).value
 
-                # Validate that the proposed move is legal
-                if game_state.is_valid_move(row, col):
-                    return (row, col)
-        except json.JSONDecodeError as e:
-            # If JSON parsing fails, continue to fallback strategy
-            pass
+            # If critical moves exist, perform those first
+            analysis = self._get_critical_moves(game_state)
+            if analysis['to_win']:
+                print(f"🏆 Win at: {analysis['to_win']}")
+                return analysis['to_win'][0]
+            elif analysis['to_defend']:
+                print(f"🛡️ Defend at: {analysis['to_defend']}")
+                return analysis['to_defend'][0]
+            elif analysis['to_defuse']:
+                print(f"💣 Defuse at: {analysis['to_defuse']}")
+                analysis['to_defuse'] = self._sort_center(analysis['to_defuse'], game_state)
+                return analysis['to_defuse'][0]
 
-        # Fallback: if LLM response is invalid, choose the first available legal move
-        return game_state.get_legal_moves()[0]
+            # Otherwise, use LLM to strategize
+            system_prompt = f"""
+### Instruction:
+You are an expert Gomoku player.\
+You will be playing on a {board_size}x{board_size} board where rows and columns are indexed 0 to 7.\
+Your pieces will be marked by '{player}', and your opponent's pieces will be marked by '{opponent}'.\
+Your goal is to be the first to place 5 consecutive '{player}' horiontally, vertically, or diagionally.
+
+### Strategy:
+Before making any move, you must first analyze the board and apply these strategies.
+- Build intersecting forks with open ends from multiple directions.
+- Make use of diagonal attacks.
+- Take control of the center of the board.
+- Predict your opponent's moves, intercept, and surround them.
+
+### Response:
+Respond with a valid JSON using a ```json wrapper.\
+Do not output any intermediate thinking, explanation, or additional remark.
+
+```json
+{{
+    "analysis": "<brief analysis of the board state>",
+    "strategy": "<which strategy you're applying>",
+    "move": {{"row": <row_number>, "col": <col_number>}}
+}}
+```
+""".strip()
+
+            board_str = game_state.format_board(formatter="standard")
+            unoccupied_pos = []
+            for row in range(game_state.board_size):
+                for col in range(game_state.board_size):
+                    if game_state.board[row][col] not in [player, opponent]:
+                        unoccupied_pos.append((row, col))
+
+            board_prompt = f"Current board state:\n{board_str}\n"
+            board_prompt += f"You are playing as: {player}\n"
+            if game_state.move_history:
+                last_move = game_state.move_history[-1]
+                board_prompt += f"Your last move was: ({last_move.row}, {last_move.col})\n"
+            board_prompt += f"You can make moves at: {', '.join(f'({r},{c})' for r, c in unoccupied_pos)}\n"
+
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"{board_prompt}Best move in JSON: "},
+            ]
+
+            print("💡 Full Prompt:\n\n")
+            print(json.dumps(messages, indent=2, ensure_ascii=False))
+            print()
+
+            response = await self.llm_client.complete(messages)
+
+            print("💡 Response:\n\n")
+            print(response)
+            print()
+
+            move = self._parse_move_response(response, game_state, analysis)
+            return move
+
+        # Use fallback if there are errors
+        except Exception as e:
+            print(f"🚫 LLM error for agent {self.agent_id}: {e}")
+            self.invalid_moves += 1
+            return self._get_fallback_move(game_state)
+
+    # Parse LLM response
+    def _parse_move_response(self, response: str, game_state: GameState, analysis: Dict) -> Tuple[int, int]:
+        try:
+            json_match = re.search(r"```json([^`]+)```", response, re.DOTALL)
+            if json_match:
+                json_str = json_match.group(1).strip()
+                data = json.loads(json_str)
+
+                if "move" in data:
+                    move = data["move"]
+                    row, col = move["row"], move["col"]
+
+                    if game_state.is_valid_move(row, col):
+                        return (row, col)
+
+                    # Use fallback if move is invalid
+                    else:
+                        print(f"⚠️ Invalid move by {self.agent_id}: ({row}, {col})")
+                        self.invalid_moves += 1
+                        return self._get_fallback_move(game_state)
+
+        # Use fallback if there are parsing errors
+        except Exception as e:
+            print(f"❌ JSON parsing error: {e}")
+            return self._get_fallback_move(game_state)
+
+    # Fallback moves
+    def _get_fallback_move(self, game_state: GameState) -> Tuple[int, int]:
+
+        # Try center first
+        n = game_state.board_size
+        center = n // 2
+        if game_state.is_valid_move(center, center):
+            return (center, center)
+
+        # Otherwise, try legal moves close to center
+        legal_moves = game_state.get_legal_moves()
+        legal_moves = self._sort_center(legal_moves, game_state)
+        return legal_moves[0]
+    

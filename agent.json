@@ -1,7 +1,7 @@
 {
-    "name": "GOMOKU",
-    "agent_class": "gomoku_agent.GomokuAgent", 
+    "name": "GoGomoku",
+    "agent_class": "gomoku_agent.GoGomoku", 
     "author": "mochenhuang.2024@mitb.smu.edu.sg; sengzhangan.20244@mitb.smu.edu.sg; yunsi.goh.20244@mitb.smu.edu.sg",
     "description": "A prompt-based LLM-powered agent that plays the game of Gomoku on a 8x8 board.",
-    "version": "1.0.0"
+    "version": "5.0.0"
 }
