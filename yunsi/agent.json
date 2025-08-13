@@ -1,7 +1,0 @@
-{
-    "name": "yunsi",
-    "agent_class": "yunsi_agent.GomokuAgent", 
-    "author": "yunsigoh.2024@mitb.smu.edu.sg",
-    "description": "Yun Si's agent",
-    "version": "1.0.0"
-}
