@@ -45,9 +45,12 @@ class GoGomoku(Agent):
                         analysis['to_defend'].append((row, col))
 
                     # Get list of moves to defuse (prevent opponent from winning in the next 2 turns)
+                    # TODO: check for ._xxx.  .xx_x. instead of .xxx.
                     if (self._check_lines(game_state, row, col, opponent, 4) and
                         self._check_open(game_state, row, col)):
                         analysis['to_defuse'].append((row, col))
+
+                    # TODO: get attack moves (e.g. creating forks)?
 
         return analysis
 
@@ -128,12 +131,14 @@ class GoGomoku(Agent):
             opponent = (Player.WHITE if self.player == Player.BLACK else Player.BLACK).value
 
             # If critical moves exist, perform those first
+            # TODO: sort by number of surrounding pieces too?
             analysis = self._get_critical_moves(game_state)
             if analysis['to_win']:
                 print(f"🏆 Win at: {analysis['to_win']}")
                 return analysis['to_win'][0]
             elif analysis['to_defend']:
                 print(f"🛡️ Defend at: {analysis['to_defend']}")
+                analysis['to_defend'] = self._sort_center(analysis['to_defend'], game_state)
                 return analysis['to_defend'][0]
             elif analysis['to_defuse']:
                 print(f"💣 Defuse at: {analysis['to_defuse']}")
