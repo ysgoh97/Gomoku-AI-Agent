@@ -1,0 +1,1015 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gomoku Game Log - gomoku_agent.SZT4:SZT4 vs gomoku_agent.YSV7:YSv7</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5 !important;
+            color: #212529 !important;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white !important;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: #212529 !important;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            color: #212529 !important;
+        }
+        .header h1, .header h2, .header h3 {
+            color: #212529 !important;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #212529 !important;
+        }
+        p, span, div, strong, b {
+            color: #212529 !important;
+        }
+        * {
+            color: #212529 !important;
+        }
+        .container * {
+            color: #212529 !important;
+        }
+        .game-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .info-card {
+            background: #f8f9fa !important;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            color: #212529 !important;
+        }
+        .info-card h3 {
+            color: #212529 !important;
+            margin-top: 0;
+        }
+        .info-card p {
+            color: #212529 !important;
+            margin: 5px 0;
+        }
+        .info-card strong {
+            color: #212529 !important;
+        }
+        .board-container {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .board-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .history-section {
+            flex: 1;
+        }
+        .gomoku-board {
+            border-collapse: collapse;
+            background: #deb887;
+            border: 3px solid #8b4513;
+        }
+        .gomoku-board th {
+            background: #8b4513 !important;
+            color: white !important;
+            padding: 5px 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .gomoku-board td {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #8b4513;
+            text-align: center;
+            vertical-align: middle;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: default;
+            position: relative;
+            box-sizing: border-box;
+        }
+        .cell.black {
+            background: #333 !important;
+            color: white !important;
+        }
+        .cell.white {
+            background: #fff !important;
+            color: black !important;
+        }
+        .cell.winning {
+            background: #f44336 !important;
+            color: white !important;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        .controls {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .controls button {
+            background: #007bff !important;
+            color: white !important;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .controls button:hover {
+            background: #0056b3 !important;
+        }
+        .controls button:disabled {
+            background: #ccc !important;
+            color: #666 !important;
+            cursor: not-allowed;
+        }
+        .move-info {
+            margin-top: 10px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+        .move-list {
+            max-height: 600px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            background: white !important;
+            color: #212529 !important;
+        }
+        .move-item {
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+            color: #212529 !important;
+        }
+        .move-item:hover {
+            background: #f0f0f0;
+        }
+        .move-item.current {
+            background: #007bff !important;
+            color: white !important;
+        }
+        .move-item.illegal {
+            background: #f8d7da !important;
+            border-left: 4px solid #dc3545;
+            color: #721c24 !important;
+        }
+        .move-item.illegal:hover {
+            background: #f1b0b7 !important;
+        }
+        .move-item.illegal.current {
+            background: #dc3545 !important;
+            color: white !important;
+        }
+        .move-item.current .llm-conversation {
+            background: #f8f9fa !important;
+            color: #212529 !important;
+        }
+        .move-item.current .llm-input {
+            background: #e3f2fd !important;
+            color: #212529 !important;
+        }
+        .move-item.current .llm-output {
+            background: #f3e5f5 !important;
+            color: #212529 !important;
+        }
+        .move-item.current .llm-role {
+            color: #495057 !important;
+        }
+        .result-banner {
+            background: #28a745 !important;
+            color: white !important;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .llm-conversation {
+            background: #f8f9fa !important;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin-top: 10px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            color: #212529 !important;
+        }
+        .llm-input {
+            background: #e3f2fd !important;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 4px solid #2196f3;
+            color: #212529 !important;
+        }
+        .llm-output {
+            background: #f3e5f5 !important;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #9c27b0;
+            color: #212529 !important;
+        }
+        .llm-role {
+            font-weight: bold;
+            color: #495057 !important;
+            margin-bottom: 5px;
+        }
+        .llm-content {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .llm-toggle {
+            background: #6c757d;
+            color: white !important;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+        .llm-toggle:hover {
+            background: #5a6268;
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Gomoku Game Log</h1>
+            <h2>gomoku_agent.SZT4:SZT4 vs gomoku_agent.YSV7:YSv7</h2>
+        </div>
+        
+        <div class="result-banner">
+            🏆 Winner: SZT4 - Five in a row
+        </div>
+        
+        <div class="game-info">
+            <div class="info-card">
+                <h3>Game Details</h3>
+                <p><strong>Total Moves:</strong> 31</p>
+                <p><strong>Board Size:</strong> 8x8</p>
+                <p><strong>Total Time:</strong> 3.21s</p>
+            </div>
+            <div class="info-card">
+                <h3>Players</h3>
+                <p><strong>Black (X):</strong> gomoku_agent.SZT4:SZT4</p>
+                <p><strong>White (O):</strong> gomoku_agent.YSV7:YSv7</p>
+            </div>
+        </div>
+        
+        <div class="board-container">
+            <div class="board-section">
+                <div id="board-display">
+                    <table class="gomoku-board"><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr><tr><th>0</th><td class="cell" data-row="0" data-col="0"></td><td class="cell" data-row="0" data-col="1"></td><td class="cell" data-row="0" data-col="2"></td><td class="cell" data-row="0" data-col="3"></td><td class="cell" data-row="0" data-col="4"></td><td class="cell" data-row="0" data-col="5"></td><td class="cell" data-row="0" data-col="6"></td><td class="cell" data-row="0" data-col="7"></td></tr><tr><th>1</th><td class="cell" data-row="1" data-col="0"></td><td class="cell" data-row="1" data-col="1"></td><td class="cell" data-row="1" data-col="2"></td><td class="cell" data-row="1" data-col="3"></td><td class="cell" data-row="1" data-col="4"></td><td class="cell" data-row="1" data-col="5"></td><td class="cell" data-row="1" data-col="6"></td><td class="cell" data-row="1" data-col="7"></td></tr><tr><th>2</th><td class="cell" data-row="2" data-col="0"></td><td class="cell" data-row="2" data-col="1"></td><td class="cell" data-row="2" data-col="2"></td><td class="cell" data-row="2" data-col="3"></td><td class="cell" data-row="2" data-col="4"></td><td class="cell" data-row="2" data-col="5"></td><td class="cell" data-row="2" data-col="6"></td><td class="cell" data-row="2" data-col="7"></td></tr><tr><th>3</th><td class="cell" data-row="3" data-col="0"></td><td class="cell" data-row="3" data-col="1"></td><td class="cell" data-row="3" data-col="2"></td><td class="cell" data-row="3" data-col="3"></td><td class="cell" data-row="3" data-col="4"></td><td class="cell" data-row="3" data-col="5"></td><td class="cell" data-row="3" data-col="6"></td><td class="cell" data-row="3" data-col="7"></td></tr><tr><th>4</th><td class="cell" data-row="4" data-col="0"></td><td class="cell" data-row="4" data-col="1"></td><td class="cell" data-row="4" data-col="2"></td><td class="cell" data-row="4" data-col="3"></td><td class="cell" data-row="4" data-col="4"></td><td class="cell" data-row="4" data-col="5"></td><td class="cell" data-row="4" data-col="6"></td><td class="cell" data-row="4" data-col="7"></td></tr><tr><th>5</th><td class="cell" data-row="5" data-col="0"></td><td class="cell" data-row="5" data-col="1"></td><td class="cell" data-row="5" data-col="2"></td><td class="cell" data-row="5" data-col="3"></td><td class="cell" data-row="5" data-col="4"></td><td class="cell" data-row="5" data-col="5"></td><td class="cell" data-row="5" data-col="6"></td><td class="cell" data-row="5" data-col="7"></td></tr><tr><th>6</th><td class="cell" data-row="6" data-col="0"></td><td class="cell" data-row="6" data-col="1"></td><td class="cell" data-row="6" data-col="2"></td><td class="cell" data-row="6" data-col="3"></td><td class="cell" data-row="6" data-col="4"></td><td class="cell" data-row="6" data-col="5"></td><td class="cell" data-row="6" data-col="6"></td><td class="cell" data-row="6" data-col="7"></td></tr><tr><th>7</th><td class="cell" data-row="7" data-col="0"></td><td class="cell" data-row="7" data-col="1"></td><td class="cell" data-row="7" data-col="2"></td><td class="cell" data-row="7" data-col="3"></td><td class="cell" data-row="7" data-col="4"></td><td class="cell" data-row="7" data-col="5"></td><td class="cell" data-row="7" data-col="6"></td><td class="cell" data-row="7" data-col="7"></td></tr></table>
+                </div>
+                
+                <div class="controls">
+                    <button id="play-btn" onclick="toggleAutoPlay()">▶️ Play</button>
+                    <button id="first-btn" onclick="goToMove(0)">⏮ First</button>
+                    <button id="prev-btn" onclick="previousMove()">⏪ Previous</button>
+                    <button id="next-btn" onclick="nextMove()">Next ⏩</button>
+                    <button id="last-btn" onclick="goToMove(31)">Last ⏭</button>
+                    
+                    <div class="move-info">
+                        <div id="move-display">Move: 0 / 31</div>
+                        <div id="current-player">Current Position: Game Start</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="history-section">
+                <h3>Move History</h3>
+                <div class="move-list" id="move-list">
+                    <div class="move-item current" onclick="goToMove(0)">
+                        <strong>Game Start</strong><br>
+                        Empty board
+                    </div>
+
+                    <div class="move-item" onclick="goToMove(1)">
+                        <strong>Move 1: X</strong><br>
+                        SZT4<br>
+                        Position: (4, 4)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(2)">
+                        <strong>Move 2: O</strong><br>
+                        YSv7<br>
+                        Position: (4, 5)<br>
+                        Time: 0.88s
+                        <button class="llm-toggle" onclick="event.stopPropagation(); toggleLLMConversation('llm-1')">
+                            🤖 LLM Log (1)
+                        </button>
+                        <div id="llm-1" class="llm-conversation" style="display: none;">
+                            <div style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                <div class="llm-role" style="color: #6c757d; font-size: 11px;">
+                                    Call #1 - Model: gemma2-9b-it
+                                </div>
+                                <div class="llm-input">
+                                    <div class="llm-role">System:</div>
+                                    <div class="llm-content">### Instruction:
+You are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by &#x27;O&#x27;, and your opponent&#x27;s pieces will be marked by &#x27;X&#x27;.Your goal is to be the first to place 5 consecutive &#x27;O&#x27; horiontally, vertically, or diagionally.
+
+### Strategy:
+Before making any move, you must first analyze the board and apply these strategies.
+- Build intersecting forks with open ends from multiple directions.
+- Make use of diagonal attacks.
+- Take control of the center of the board.
+- Predict your opponent&#x27;s moves, intercept, and surround them.
+
+### Response:
+Respond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.
+
+```json
+{
+    &quot;analysis&quot;: &quot;&lt;brief analysis of the board state&gt;&quot;,
+    &quot;strategy&quot;: &quot;&lt;which strategy you&#x27;re applying&gt;&quot;,
+    &quot;move&quot;: {&quot;row&quot;: &lt;row_number&gt;, &quot;col&quot;: &lt;col_number&gt;}
+}
+```</div>
+                                    <div class="llm-role">User:</div>
+                                    <div class="llm-content">Current board state:
+    0  1  2  3  4  5  6  7 
+ 0  .  .  .  .  .  .  .  . 
+ 1  .  .  .  .  .  .  .  . 
+ 2  .  .  .  .  .  .  .  . 
+ 3  .  .  .  .  .  .  .  . 
+ 4  .  .  .  .  X  .  .  . 
+ 5  .  .  .  .  .  .  .  . 
+ 6  .  .  .  .  .  .  .  . 
+ 7  .  .  .  .  .  .  .  . 
+
+You are playing as: O
+Your last move was: (4, 4)
+You can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7), (2,0), (2,1), (2,2), (2,3), (2,4), (2,5), (2,6), (2,7), (3,0), (3,1), (3,2), (3,3), (3,4), (3,5), (3,6), (3,7), (4,0), (4,1), (4,2), (4,3), (4,5), (4,6), (4,7), (5,0), (5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), (6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,4), (7,5), (7,6), (7,7)
+Best move in JSON: </div>
+                                </div>
+                                <div class="llm-output">
+                                    <div class="llm-role">Response:</div>
+                                    <div class="llm-content">```json
+{
+    &quot;analysis&quot;: &quot;Center control is open, allowing for potential forks and diagonal attacks.&quot;,
+    &quot;strategy&quot;: &quot;Center control&quot;,
+    &quot;move&quot;: {&quot;row&quot;: 4, &quot;col&quot;: 5}
+}
+``` 
+</div>
+                                </div>
+                            </div></div></div>
+                    <div class="move-item" onclick="goToMove(3)">
+                        <strong>Move 3: X</strong><br>
+                        SZT4<br>
+                        Position: (3, 3)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(4)">
+                        <strong>Move 4: O</strong><br>
+                        YSv7<br>
+                        Position: (3, 2)<br>
+                        Time: 0.46s
+                        <button class="llm-toggle" onclick="event.stopPropagation(); toggleLLMConversation('llm-3')">
+                            🤖 LLM Log (1)
+                        </button>
+                        <div id="llm-3" class="llm-conversation" style="display: none;">
+                            <div style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                <div class="llm-role" style="color: #6c757d; font-size: 11px;">
+                                    Call #1 - Model: gemma2-9b-it
+                                </div>
+                                <div class="llm-input">
+                                    <div class="llm-role">System:</div>
+                                    <div class="llm-content">### Instruction:
+You are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by &#x27;O&#x27;, and your opponent&#x27;s pieces will be marked by &#x27;X&#x27;.Your goal is to be the first to place 5 consecutive &#x27;O&#x27; horiontally, vertically, or diagionally.
+
+### Strategy:
+Before making any move, you must first analyze the board and apply these strategies.
+- Build intersecting forks with open ends from multiple directions.
+- Make use of diagonal attacks.
+- Take control of the center of the board.
+- Predict your opponent&#x27;s moves, intercept, and surround them.
+
+### Response:
+Respond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.
+
+```json
+{
+    &quot;analysis&quot;: &quot;&lt;brief analysis of the board state&gt;&quot;,
+    &quot;strategy&quot;: &quot;&lt;which strategy you&#x27;re applying&gt;&quot;,
+    &quot;move&quot;: {&quot;row&quot;: &lt;row_number&gt;, &quot;col&quot;: &lt;col_number&gt;}
+}
+```</div>
+                                    <div class="llm-role">User:</div>
+                                    <div class="llm-content">Current board state:
+    0  1  2  3  4  5  6  7 
+ 0  .  .  .  .  .  .  .  . 
+ 1  .  .  .  .  .  .  .  . 
+ 2  .  .  .  .  .  .  .  . 
+ 3  .  .  .  X  .  .  .  . 
+ 4  .  .  .  .  X  O  .  . 
+ 5  .  .  .  .  .  .  .  . 
+ 6  .  .  .  .  .  .  .  . 
+ 7  .  .  .  .  .  .  .  . 
+
+You are playing as: O
+Your last move was: (3, 3)
+You can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7), (2,0), (2,1), (2,2), (2,3), (2,4), (2,5), (2,6), (2,7), (3,0), (3,1), (3,2), (3,4), (3,5), (3,6), (3,7), (4,0), (4,1), (4,2), (4,3), (4,6), (4,7), (5,0), (5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), (6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,4), (7,5), (7,6), (7,7)
+Best move in JSON: </div>
+                                </div>
+                                <div class="llm-output">
+                                    <div class="llm-role">Response:</div>
+                                    <div class="llm-content">```json
+{
+    &quot;analysis&quot;: &quot;Opponent has a potential diagonal attack, intercepting it is crucial.&quot;,
+    &quot;strategy&quot;: &quot;Intercepting opponent&#x27;s attack&quot;,
+    &quot;move&quot;: {&quot;row&quot;: 3, &quot;col&quot;: 2}
+}
+```</div>
+                                </div>
+                            </div></div></div>
+                    <div class="move-item" onclick="goToMove(5)">
+                        <strong>Move 5: X</strong><br>
+                        SZT4<br>
+                        Position: (3, 5)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(6)">
+                        <strong>Move 6: O</strong><br>
+                        YSv7<br>
+                        Position: (3, 6)<br>
+                        Time: 0.44s
+                        <button class="llm-toggle" onclick="event.stopPropagation(); toggleLLMConversation('llm-5')">
+                            🤖 LLM Log (1)
+                        </button>
+                        <div id="llm-5" class="llm-conversation" style="display: none;">
+                            <div style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                <div class="llm-role" style="color: #6c757d; font-size: 11px;">
+                                    Call #1 - Model: gemma2-9b-it
+                                </div>
+                                <div class="llm-input">
+                                    <div class="llm-role">System:</div>
+                                    <div class="llm-content">### Instruction:
+You are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by &#x27;O&#x27;, and your opponent&#x27;s pieces will be marked by &#x27;X&#x27;.Your goal is to be the first to place 5 consecutive &#x27;O&#x27; horiontally, vertically, or diagionally.
+
+### Strategy:
+Before making any move, you must first analyze the board and apply these strategies.
+- Build intersecting forks with open ends from multiple directions.
+- Make use of diagonal attacks.
+- Take control of the center of the board.
+- Predict your opponent&#x27;s moves, intercept, and surround them.
+
+### Response:
+Respond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.
+
+```json
+{
+    &quot;analysis&quot;: &quot;&lt;brief analysis of the board state&gt;&quot;,
+    &quot;strategy&quot;: &quot;&lt;which strategy you&#x27;re applying&gt;&quot;,
+    &quot;move&quot;: {&quot;row&quot;: &lt;row_number&gt;, &quot;col&quot;: &lt;col_number&gt;}
+}
+```</div>
+                                    <div class="llm-role">User:</div>
+                                    <div class="llm-content">Current board state:
+    0  1  2  3  4  5  6  7 
+ 0  .  .  .  .  .  .  .  . 
+ 1  .  .  .  .  .  .  .  . 
+ 2  .  .  .  .  .  .  .  . 
+ 3  .  .  O  X  .  X  .  . 
+ 4  .  .  .  .  X  O  .  . 
+ 5  .  .  .  .  .  .  .  . 
+ 6  .  .  .  .  .  .  .  . 
+ 7  .  .  .  .  .  .  .  . 
+
+You are playing as: O
+Your last move was: (3, 5)
+You can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7), (2,0), (2,1), (2,2), (2,3), (2,4), (2,5), (2,6), (2,7), (3,0), (3,1), (3,4), (3,6), (3,7), (4,0), (4,1), (4,2), (4,3), (4,6), (4,7), (5,0), (5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), (6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,4), (7,5), (7,6), (7,7)
+Best move in JSON: </div>
+                                </div>
+                                <div class="llm-output">
+                                    <div class="llm-role">Response:</div>
+                                    <div class="llm-content">```json
+{
+    &quot;analysis&quot;: &quot;Opportunity to create a diagonal fork.&quot;,
+    &quot;strategy&quot;: &quot;Diagonal attack&quot;,
+    &quot;move&quot;: {&quot;row&quot;: 3, &quot;col&quot;: 6}
+}
+```</div>
+                                </div>
+                            </div></div></div>
+                    <div class="move-item" onclick="goToMove(7)">
+                        <strong>Move 7: X</strong><br>
+                        SZT4<br>
+                        Position: (5, 3)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(8)">
+                        <strong>Move 8: O</strong><br>
+                        YSv7<br>
+                        Position: (2, 6)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(9)">
+                        <strong>Move 9: X</strong><br>
+                        SZT4<br>
+                        Position: (5, 5)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(10)">
+                        <strong>Move 10: O</strong><br>
+                        YSv7<br>
+                        Position: (2, 2)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(11)">
+                        <strong>Move 11: X</strong><br>
+                        SZT4<br>
+                        Position: (4, 3)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(12)">
+                        <strong>Move 12: O</strong><br>
+                        YSv7<br>
+                        Position: (2, 3)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(13)">
+                        <strong>Move 13: X</strong><br>
+                        SZT4<br>
+                        Position: (5, 4)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(14)">
+                        <strong>Move 14: O</strong><br>
+                        YSv7<br>
+                        Position: (5, 6)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(15)">
+                        <strong>Move 15: X</strong><br>
+                        SZT4<br>
+                        Position: (3, 4)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(16)">
+                        <strong>Move 16: O</strong><br>
+                        YSv7<br>
+                        Position: (2, 4)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(17)">
+                        <strong>Move 17: X</strong><br>
+                        SZT4<br>
+                        Position: (2, 5)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(18)">
+                        <strong>Move 18: O</strong><br>
+                        YSv7<br>
+                        Position: (1, 6)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(19)">
+                        <strong>Move 19: X</strong><br>
+                        SZT4<br>
+                        Position: (4, 6)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(20)">
+                        <strong>Move 20: O</strong><br>
+                        YSv7<br>
+                        Position: (1, 3)<br>
+                        Time: 0.46s
+                        <button class="llm-toggle" onclick="event.stopPropagation(); toggleLLMConversation('llm-19')">
+                            🤖 LLM Log (1)
+                        </button>
+                        <div id="llm-19" class="llm-conversation" style="display: none;">
+                            <div style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                <div class="llm-role" style="color: #6c757d; font-size: 11px;">
+                                    Call #1 - Model: gemma2-9b-it
+                                </div>
+                                <div class="llm-input">
+                                    <div class="llm-role">System:</div>
+                                    <div class="llm-content">### Instruction:
+You are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by &#x27;O&#x27;, and your opponent&#x27;s pieces will be marked by &#x27;X&#x27;.Your goal is to be the first to place 5 consecutive &#x27;O&#x27; horiontally, vertically, or diagionally.
+
+### Strategy:
+Before making any move, you must first analyze the board and apply these strategies.
+- Build intersecting forks with open ends from multiple directions.
+- Make use of diagonal attacks.
+- Take control of the center of the board.
+- Predict your opponent&#x27;s moves, intercept, and surround them.
+
+### Response:
+Respond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.
+
+```json
+{
+    &quot;analysis&quot;: &quot;&lt;brief analysis of the board state&gt;&quot;,
+    &quot;strategy&quot;: &quot;&lt;which strategy you&#x27;re applying&gt;&quot;,
+    &quot;move&quot;: {&quot;row&quot;: &lt;row_number&gt;, &quot;col&quot;: &lt;col_number&gt;}
+}
+```</div>
+                                    <div class="llm-role">User:</div>
+                                    <div class="llm-content">Current board state:
+    0  1  2  3  4  5  6  7 
+ 0  .  .  .  .  .  .  .  . 
+ 1  .  .  .  .  .  .  O  . 
+ 2  .  .  O  O  O  X  O  . 
+ 3  .  .  O  X  X  X  O  . 
+ 4  .  .  .  X  X  O  X  . 
+ 5  .  .  .  X  X  X  O  . 
+ 6  .  .  .  .  .  .  .  . 
+ 7  .  .  .  .  .  .  .  . 
+
+You are playing as: O
+Your last move was: (4, 6)
+You can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,7), (2,0), (2,1), (2,7), (3,0), (3,1), (3,7), (4,0), (4,1), (4,2), (4,7), (5,0), (5,1), (5,2), (5,7), (6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,4), (7,5), (7,6), (7,7)
+Consider fork opportunities at: [(1, 3), (1, 5), (2, 7), (1, 4), (4, 7), (3, 1), (3, 7), (1, 2), (2, 1), (1, 7)]
+Best move in JSON: </div>
+                                </div>
+                                <div class="llm-output">
+                                    <div class="llm-role">Response:</div>
+                                    <div class="llm-content">```json
+{
+    &quot;analysis&quot;: &quot;Building a fork with open ends on the diagonal.&quot;,
+    &quot;strategy&quot;: &quot;Fork&quot;,
+    &quot;move&quot;: {&quot;row&quot;: 1, &quot;col&quot;: 3}
+}
+``` 
+</div>
+                                </div>
+                            </div></div></div>
+                    <div class="move-item" onclick="goToMove(21)">
+                        <strong>Move 21: X</strong><br>
+                        SZT4<br>
+                        Position: (6, 4)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(22)">
+                        <strong>Move 22: O</strong><br>
+                        YSv7<br>
+                        Position: (7, 4)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(23)">
+                        <strong>Move 23: X</strong><br>
+                        SZT4<br>
+                        Position: (4, 2)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(24)">
+                        <strong>Move 24: O</strong><br>
+                        YSv7<br>
+                        Position: (3, 1)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(25)">
+                        <strong>Move 25: X</strong><br>
+                        SZT4<br>
+                        Position: (4, 0)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(26)">
+                        <strong>Move 26: O</strong><br>
+                        YSv7<br>
+                        Position: (4, 1)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(27)">
+                        <strong>Move 27: X</strong><br>
+                        SZT4<br>
+                        Position: (1, 4)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(28)">
+                        <strong>Move 28: O</strong><br>
+                        YSv7<br>
+                        Position: (1, 5)<br>
+                        Time: 0.47s
+                        <button class="llm-toggle" onclick="event.stopPropagation(); toggleLLMConversation('llm-27')">
+                            🤖 LLM Log (1)
+                        </button>
+                        <div id="llm-27" class="llm-conversation" style="display: none;">
+                            <div style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                <div class="llm-role" style="color: #6c757d; font-size: 11px;">
+                                    Call #1 - Model: gemma2-9b-it
+                                </div>
+                                <div class="llm-input">
+                                    <div class="llm-role">System:</div>
+                                    <div class="llm-content">### Instruction:
+You are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by &#x27;O&#x27;, and your opponent&#x27;s pieces will be marked by &#x27;X&#x27;.Your goal is to be the first to place 5 consecutive &#x27;O&#x27; horiontally, vertically, or diagionally.
+
+### Strategy:
+Before making any move, you must first analyze the board and apply these strategies.
+- Build intersecting forks with open ends from multiple directions.
+- Make use of diagonal attacks.
+- Take control of the center of the board.
+- Predict your opponent&#x27;s moves, intercept, and surround them.
+
+### Response:
+Respond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.
+
+```json
+{
+    &quot;analysis&quot;: &quot;&lt;brief analysis of the board state&gt;&quot;,
+    &quot;strategy&quot;: &quot;&lt;which strategy you&#x27;re applying&gt;&quot;,
+    &quot;move&quot;: {&quot;row&quot;: &lt;row_number&gt;, &quot;col&quot;: &lt;col_number&gt;}
+}
+```</div>
+                                    <div class="llm-role">User:</div>
+                                    <div class="llm-content">Current board state:
+    0  1  2  3  4  5  6  7 
+ 0  .  .  .  .  .  .  .  . 
+ 1  .  .  .  O  X  .  O  . 
+ 2  .  .  O  O  O  X  O  . 
+ 3  .  O  O  X  X  X  O  . 
+ 4  X  O  X  X  X  O  X  . 
+ 5  .  .  .  X  X  X  O  . 
+ 6  .  .  .  .  X  .  .  . 
+ 7  .  .  .  .  O  .  .  . 
+
+You are playing as: O
+Your last move was: (1, 4)
+You can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,5), (1,7), (2,0), (2,1), (2,7), (3,0), (3,7), (4,7), (5,0), (5,1), (5,2), (5,7), (6,0), (6,1), (6,2), (6,3), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,5), (7,6), (7,7)
+Consider fork opportunities at: [(1, 5), (1, 2), (2, 1), (2, 7), (4, 7), (3, 7), (3, 0), (1, 7)]
+Best move in JSON: </div>
+                                </div>
+                                <div class="llm-output">
+                                    <div class="llm-role">Response:</div>
+                                    <div class="llm-content">```json
+{
+    &quot;analysis&quot;: &quot;Fork opportunity at (1, 5) creates open ends in multiple directions.&quot;,
+    &quot;strategy&quot;: &quot;Forking&quot;,
+    &quot;move&quot;: {
+        &quot;row&quot;: 1,
+        &quot;col&quot;: 5
+    }
+}
+``` 
+</div>
+                                </div>
+                            </div></div></div>
+                    <div class="move-item" onclick="goToMove(29)">
+                        <strong>Move 29: X</strong><br>
+                        SZT4<br>
+                        Position: (5, 2)<br>
+                        Time: 0.45s
+                        <button class="llm-toggle" onclick="event.stopPropagation(); toggleLLMConversation('llm-28')">
+                            🤖 LLM Log (1)
+                        </button>
+                        <div id="llm-28" class="llm-conversation" style="display: none;">
+                            <div style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                <div class="llm-role" style="color: #6c757d; font-size: 11px;">
+                                    Call #1 - Model: gemma2-9b-it
+                                </div>
+                                <div class="llm-input">
+                                    <div class="llm-role">System:</div>
+                                    <div class="llm-content">You are an expert Gomoku (Five-in-a-Row) player. The board is 0-indexed.
+Goal: make 5 in a row and prevent opponent from doing so.
+
+ABSOLUTE PRIORITIES (apply in EXACT order each move):
+1) WIN: Complete 5-in-a-row immediately.
+2) BLOCK: If the opponent can complete 5-in-a-row next, block immediately.
+3) BLOCK EXISTING OPEN THREE: If opponent ALREADY has an open-three on board, block it.
+4) CREATE OPEN THREE: Make your own open-three.
+5) CREATE DOUBLE THREATS.
+6) IMPROVE POSITION: Extend your lines and control the center.
+
+HARD CONSTRAINTS:
+- Only place on &#x27;.&#x27;
+- Coordinates within [0..N-1]
+- Respond ONLY with a JSON object in ```json ... ```
+
+OUTPUT FORMAT:
+```json
+{
+  &quot;reasoning&quot;: &quot;1–2 short sentences stating which rule you applied&quot;,
+  &quot;move&quot;: {&quot;row&quot;: &lt;int&gt;, &quot;col&quot;: &lt;int&gt;}
+}
+```</div>
+                                    <div class="llm-role">User:</div>
+                                    <div class="llm-content">Current board state:
+    0  1  2  3  4  5  6  7 
+ 0  .  .  .  .  .  .  .  . 
+ 1  .  .  .  O  X  O  O  . 
+ 2  .  .  O  O  O  X  O  . 
+ 3  .  O  O  X  X  X  O  . 
+ 4  X  O  X  X  X  O  X  . 
+ 5  .  .  .  X  X  X  O  . 
+ 6  .  .  .  .  X  .  .  . 
+ 7  .  .  .  .  O  .  .  . 
+
+Current player: X
+Move count: 28
+Last move: O at (1, 5)
+
+
+Please provide your next move as JSON.</div>
+                                </div>
+                                <div class="llm-output">
+                                    <div class="llm-role">Response:</div>
+                                    <div class="llm-content">```json
+{
+  &quot;reasoning&quot;: &quot;Blocking opponent&#x27;s open three on row 3&quot;,
+  &quot;move&quot;: {&quot;row&quot;: 3, &quot;col&quot;: 6}
+}
+``` 
+</div>
+                                </div>
+                            </div></div></div>
+                    <div class="move-item" onclick="goToMove(30)">
+                        <strong>Move 30: O</strong><br>
+                        YSv7<br>
+                        Position: (5, 1)<br>
+                        Time: 0.00s</div>
+                    <div class="move-item" onclick="goToMove(31)">
+                        <strong>Move 31: X</strong><br>
+                        SZT4<br>
+                        Position: (6, 1)<br>
+                        Time: 0.00s</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const boardStates = [[[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", "X", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", "X", "O", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "X", ".", ".", ".", "."], [".", ".", ".", ".", "X", "O", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", "O", "X", ".", ".", ".", "."], [".", ".", ".", ".", "X", "O", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", "O", "X", ".", "X", ".", "."], [".", ".", ".", ".", "X", "O", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", "O", "X", ".", "X", "O", "."], [".", ".", ".", ".", "X", "O", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", "O", "X", ".", "X", "O", "."], [".", ".", ".", ".", "X", "O", ".", "."], [".", ".", ".", "X", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", "O", "."], [".", ".", "O", "X", ".", "X", "O", "."], [".", ".", ".", ".", "X", "O", ".", "."], [".", ".", ".", "X", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", "O", "."], [".", ".", "O", "X", ".", "X", "O", "."], [".", ".", ".", ".", "X", "O", ".", "."], [".", ".", ".", "X", ".", "X", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", "O", ".", ".", ".", "O", "."], [".", ".", "O", "X", ".", "X", "O", "."], [".", ".", ".", ".", "X", "O", ".", "."], [".", ".", ".", "X", ".", "X", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", "O", ".", ".", ".", "O", "."], [".", ".", "O", "X", ".", "X", "O", "."], [".", ".", ".", "X", "X", "O", ".", "."], [".", ".", ".", "X", ".", "X", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", "O", "O", ".", ".", "O", "."], [".", ".", "O", "X", ".", "X", "O", "."], [".", ".", ".", "X", "X", "O", ".", "."], [".", ".", ".", "X", ".", "X", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", "O", "O", ".", ".", "O", "."], [".", ".", "O", "X", ".", "X", "O", "."], [".", ".", ".", "X", "X", "O", ".", "."], [".", ".", ".", "X", "X", "X", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", "O", "O", ".", ".", "O", "."], [".", ".", "O", "X", ".", "X", "O", "."], [".", ".", ".", "X", "X", "O", ".", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", "O", "O", ".", ".", "O", "."], [".", ".", "O", "X", "X", "X", "O", "."], [".", ".", ".", "X", "X", "O", ".", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", "O", "O", "O", ".", "O", "."], [".", ".", "O", "X", "X", "X", "O", "."], [".", ".", ".", "X", "X", "O", ".", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", ".", "O", "X", "X", "X", "O", "."], [".", ".", ".", "X", "X", "O", ".", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", ".", "O", "X", "X", "X", "O", "."], [".", ".", ".", "X", "X", "O", ".", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", ".", "O", "X", "X", "X", "O", "."], [".", ".", ".", "X", "X", "O", "X", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "O", ".", ".", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", ".", "O", "X", "X", "X", "O", "."], [".", ".", ".", "X", "X", "O", "X", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "O", ".", ".", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", ".", "O", "X", "X", "X", "O", "."], [".", ".", ".", "X", "X", "O", "X", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", "X", ".", ".", "."], [".", ".", ".", ".", ".", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "O", ".", ".", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", ".", "O", "X", "X", "X", "O", "."], [".", ".", ".", "X", "X", "O", "X", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", "X", ".", ".", "."], [".", ".", ".", ".", "O", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "O", ".", ".", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", ".", "O", "X", "X", "X", "O", "."], [".", ".", "X", "X", "X", "O", "X", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", "X", ".", ".", "."], [".", ".", ".", ".", "O", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "O", ".", ".", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", "O", "O", "X", "X", "X", "O", "."], [".", ".", "X", "X", "X", "O", "X", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", "X", ".", ".", "."], [".", ".", ".", ".", "O", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "O", ".", ".", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", "O", "O", "X", "X", "X", "O", "."], ["X", ".", "X", "X", "X", "O", "X", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", "X", ".", ".", "."], [".", ".", ".", ".", "O", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "O", ".", ".", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", "O", "O", "X", "X", "X", "O", "."], ["X", "O", "X", "X", "X", "O", "X", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", "X", ".", ".", "."], [".", ".", ".", ".", "O", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "O", "X", ".", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", "O", "O", "X", "X", "X", "O", "."], ["X", "O", "X", "X", "X", "O", "X", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", "X", ".", ".", "."], [".", ".", ".", ".", "O", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "O", "X", "O", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", "O", "O", "X", "X", "X", "O", "."], ["X", "O", "X", "X", "X", "O", "X", "."], [".", ".", ".", "X", "X", "X", "O", "."], [".", ".", ".", ".", "X", ".", ".", "."], [".", ".", ".", ".", "O", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "O", "X", "O", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", "O", "O", "X", "X", "X", "O", "."], ["X", "O", "X", "X", "X", "O", "X", "."], [".", ".", "X", "X", "X", "X", "O", "."], [".", ".", ".", ".", "X", ".", ".", "."], [".", ".", ".", ".", "O", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "O", "X", "O", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", "O", "O", "X", "X", "X", "O", "."], ["X", "O", "X", "X", "X", "O", "X", "."], [".", "O", "X", "X", "X", "X", "O", "."], [".", ".", ".", ".", "X", ".", ".", "."], [".", ".", ".", ".", "O", ".", ".", "."]], [[".", ".", ".", ".", ".", ".", ".", "."], [".", ".", ".", "O", "X", "O", "O", "."], [".", ".", "O", "O", "O", "X", "O", "."], [".", "O", "O", "X", "X", "X", "O", "."], ["X", "O", "X", "X", "X", "O", "X", "."], [".", "O", "X", "X", "X", "X", "O", "."], [".", "X", ".", ".", "X", ".", ".", "."], [".", ".", ".", ".", "O", ".", ".", "."]]];
+        const moves = [{"move_number": 1, "player": "SZT4", "position": [4, 4], "time": 0.0035276412963867188, "illegal": false, "llm_conversations": []}, {"move_number": 2, "player": "YSv7", "position": [4, 5], "time": 0.8825647830963135, "illegal": false, "llm_conversations": [{"timestamp": 1755801534.1018116, "input": [{"role": "system", "content": "### Instruction:\nYou are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by 'O', and your opponent's pieces will be marked by 'X'.Your goal is to be the first to place 5 consecutive 'O' horiontally, vertically, or diagionally.\n\n### Strategy:\nBefore making any move, you must first analyze the board and apply these strategies.\n- Build intersecting forks with open ends from multiple directions.\n- Make use of diagonal attacks.\n- Take control of the center of the board.\n- Predict your opponent's moves, intercept, and surround them.\n\n### Response:\nRespond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.\n\n```json\n{\n    \"analysis\": \"<brief analysis of the board state>\",\n    \"strategy\": \"<which strategy you're applying>\",\n    \"move\": {\"row\": <row_number>, \"col\": <col_number>}\n}\n```"}, {"role": "user", "content": "Current board state:\n    0  1  2  3  4  5  6  7 \n 0  .  .  .  .  .  .  .  . \n 1  .  .  .  .  .  .  .  . \n 2  .  .  .  .  .  .  .  . \n 3  .  .  .  .  .  .  .  . \n 4  .  .  .  .  X  .  .  . \n 5  .  .  .  .  .  .  .  . \n 6  .  .  .  .  .  .  .  . \n 7  .  .  .  .  .  .  .  . \n\nYou are playing as: O\nYour last move was: (4, 4)\nYou can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7), (2,0), (2,1), (2,2), (2,3), (2,4), (2,5), (2,6), (2,7), (3,0), (3,1), (3,2), (3,3), (3,4), (3,5), (3,6), (3,7), (4,0), (4,1), (4,2), (4,3), (4,5), (4,6), (4,7), (5,0), (5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), (6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,4), (7,5), (7,6), (7,7)\nBest move in JSON: "}], "output": "```json\n{\n    \"analysis\": \"Center control is open, allowing for potential forks and diagonal attacks.\",\n    \"strategy\": \"Center control\",\n    \"move\": {\"row\": 4, \"col\": 5}\n}\n``` \n", "model": "gemma2-9b-it", "client_type": "OpenAIGomokuClient"}]}, {"move_number": 3, "player": "SZT4", "position": [3, 3], "time": 0.001996278762817383, "illegal": false, "llm_conversations": []}, {"move_number": 4, "player": "YSv7", "position": [3, 2], "time": 0.46449971199035645, "illegal": false, "llm_conversations": [{"timestamp": 1755801534.9868753, "input": [{"role": "system", "content": "### Instruction:\nYou are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by 'O', and your opponent's pieces will be marked by 'X'.Your goal is to be the first to place 5 consecutive 'O' horiontally, vertically, or diagionally.\n\n### Strategy:\nBefore making any move, you must first analyze the board and apply these strategies.\n- Build intersecting forks with open ends from multiple directions.\n- Make use of diagonal attacks.\n- Take control of the center of the board.\n- Predict your opponent's moves, intercept, and surround them.\n\n### Response:\nRespond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.\n\n```json\n{\n    \"analysis\": \"<brief analysis of the board state>\",\n    \"strategy\": \"<which strategy you're applying>\",\n    \"move\": {\"row\": <row_number>, \"col\": <col_number>}\n}\n```"}, {"role": "user", "content": "Current board state:\n    0  1  2  3  4  5  6  7 \n 0  .  .  .  .  .  .  .  . \n 1  .  .  .  .  .  .  .  . \n 2  .  .  .  .  .  .  .  . \n 3  .  .  .  X  .  .  .  . \n 4  .  .  .  .  X  O  .  . \n 5  .  .  .  .  .  .  .  . \n 6  .  .  .  .  .  .  .  . \n 7  .  .  .  .  .  .  .  . \n\nYou are playing as: O\nYour last move was: (3, 3)\nYou can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7), (2,0), (2,1), (2,2), (2,3), (2,4), (2,5), (2,6), (2,7), (3,0), (3,1), (3,2), (3,4), (3,5), (3,6), (3,7), (4,0), (4,1), (4,2), (4,3), (4,6), (4,7), (5,0), (5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), (6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,4), (7,5), (7,6), (7,7)\nBest move in JSON: "}], "output": "```json\n{\n    \"analysis\": \"Opponent has a potential diagonal attack, intercepting it is crucial.\",\n    \"strategy\": \"Intercepting opponent's attack\",\n    \"move\": {\"row\": 3, \"col\": 2}\n}\n```", "model": "gemma2-9b-it", "client_type": "OpenAIGomokuClient"}]}, {"move_number": 5, "player": "SZT4", "position": [3, 5], "time": 0.0020067691802978516, "illegal": false, "llm_conversations": []}, {"move_number": 6, "player": "YSv7", "position": [3, 6], "time": 0.44421911239624023, "illegal": false, "llm_conversations": [{"timestamp": 1755801535.4543827, "input": [{"role": "system", "content": "### Instruction:\nYou are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by 'O', and your opponent's pieces will be marked by 'X'.Your goal is to be the first to place 5 consecutive 'O' horiontally, vertically, or diagionally.\n\n### Strategy:\nBefore making any move, you must first analyze the board and apply these strategies.\n- Build intersecting forks with open ends from multiple directions.\n- Make use of diagonal attacks.\n- Take control of the center of the board.\n- Predict your opponent's moves, intercept, and surround them.\n\n### Response:\nRespond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.\n\n```json\n{\n    \"analysis\": \"<brief analysis of the board state>\",\n    \"strategy\": \"<which strategy you're applying>\",\n    \"move\": {\"row\": <row_number>, \"col\": <col_number>}\n}\n```"}, {"role": "user", "content": "Current board state:\n    0  1  2  3  4  5  6  7 \n 0  .  .  .  .  .  .  .  . \n 1  .  .  .  .  .  .  .  . \n 2  .  .  .  .  .  .  .  . \n 3  .  .  O  X  .  X  .  . \n 4  .  .  .  .  X  O  .  . \n 5  .  .  .  .  .  .  .  . \n 6  .  .  .  .  .  .  .  . \n 7  .  .  .  .  .  .  .  . \n\nYou are playing as: O\nYour last move was: (3, 5)\nYou can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7), (2,0), (2,1), (2,2), (2,3), (2,4), (2,5), (2,6), (2,7), (3,0), (3,1), (3,4), (3,6), (3,7), (4,0), (4,1), (4,2), (4,3), (4,6), (4,7), (5,0), (5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), (6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,4), (7,5), (7,6), (7,7)\nBest move in JSON: "}], "output": "```json\n{\n    \"analysis\": \"Opportunity to create a diagonal fork.\",\n    \"strategy\": \"Diagonal attack\",\n    \"move\": {\"row\": 3, \"col\": 6}\n}\n```", "model": "gemma2-9b-it", "client_type": "OpenAIGomokuClient"}]}, {"move_number": 7, "player": "SZT4", "position": [5, 3], "time": 0.003002643585205078, "illegal": false, "llm_conversations": []}, {"move_number": 8, "player": "YSv7", "position": [2, 6], "time": 0.0015015602111816406, "illegal": false, "llm_conversations": []}, {"move_number": 9, "player": "SZT4", "position": [5, 5], "time": 0.002005338668823242, "illegal": false, "llm_conversations": []}, {"move_number": 10, "player": "YSv7", "position": [2, 2], "time": 0.0010039806365966797, "illegal": false, "llm_conversations": []}, {"move_number": 11, "player": "SZT4", "position": [4, 3], "time": 0.002496004104614258, "illegal": false, "llm_conversations": []}, {"move_number": 12, "player": "YSv7", "position": [2, 3], "time": 0.0010027885437011719, "illegal": false, "llm_conversations": []}, {"move_number": 13, "player": "SZT4", "position": [5, 4], "time": 0.0030019283294677734, "illegal": false, "llm_conversations": []}, {"move_number": 14, "player": "YSv7", "position": [5, 6], "time": 0.0015015602111816406, "illegal": false, "llm_conversations": []}, {"move_number": 15, "player": "SZT4", "position": [3, 4], "time": 0.0020029544830322266, "illegal": false, "llm_conversations": []}, {"move_number": 16, "player": "YSv7", "position": [2, 4], "time": 0.0010001659393310547, "illegal": false, "llm_conversations": []}, {"move_number": 17, "player": "SZT4", "position": [2, 5], "time": 0.0005021095275878906, "illegal": false, "llm_conversations": []}, {"move_number": 18, "player": "YSv7", "position": [1, 6], "time": 0.0010027885437011719, "illegal": false, "llm_conversations": []}, {"move_number": 19, "player": "SZT4", "position": [4, 6], "time": 0.0, "illegal": false, "llm_conversations": []}, {"move_number": 20, "player": "YSv7", "position": [1, 3], "time": 0.45577359199523926, "illegal": false, "llm_conversations": [{"timestamp": 1755801535.9196277, "input": [{"role": "system", "content": "### Instruction:\nYou are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by 'O', and your opponent's pieces will be marked by 'X'.Your goal is to be the first to place 5 consecutive 'O' horiontally, vertically, or diagionally.\n\n### Strategy:\nBefore making any move, you must first analyze the board and apply these strategies.\n- Build intersecting forks with open ends from multiple directions.\n- Make use of diagonal attacks.\n- Take control of the center of the board.\n- Predict your opponent's moves, intercept, and surround them.\n\n### Response:\nRespond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.\n\n```json\n{\n    \"analysis\": \"<brief analysis of the board state>\",\n    \"strategy\": \"<which strategy you're applying>\",\n    \"move\": {\"row\": <row_number>, \"col\": <col_number>}\n}\n```"}, {"role": "user", "content": "Current board state:\n    0  1  2  3  4  5  6  7 \n 0  .  .  .  .  .  .  .  . \n 1  .  .  .  .  .  .  O  . \n 2  .  .  O  O  O  X  O  . \n 3  .  .  O  X  X  X  O  . \n 4  .  .  .  X  X  O  X  . \n 5  .  .  .  X  X  X  O  . \n 6  .  .  .  .  .  .  .  . \n 7  .  .  .  .  .  .  .  . \n\nYou are playing as: O\nYour last move was: (4, 6)\nYou can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,7), (2,0), (2,1), (2,7), (3,0), (3,1), (3,7), (4,0), (4,1), (4,2), (4,7), (5,0), (5,1), (5,2), (5,7), (6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,4), (7,5), (7,6), (7,7)\nConsider fork opportunities at: [(1, 3), (1, 5), (2, 7), (1, 4), (4, 7), (3, 1), (3, 7), (1, 2), (2, 1), (1, 7)]\nBest move in JSON: "}], "output": "```json\n{\n    \"analysis\": \"Building a fork with open ends on the diagonal.\",\n    \"strategy\": \"Fork\",\n    \"move\": {\"row\": 1, \"col\": 3}\n}\n``` \n", "model": "gemma2-9b-it", "client_type": "OpenAIGomokuClient"}]}, {"move_number": 21, "player": "SZT4", "position": [6, 4], "time": 0.0035092830657958984, "illegal": false, "llm_conversations": []}, {"move_number": 22, "player": "YSv7", "position": [7, 4], "time": 0.0019996166229248047, "illegal": false, "llm_conversations": []}, {"move_number": 23, "player": "SZT4", "position": [4, 2], "time": 0.0019996166229248047, "illegal": false, "llm_conversations": []}, {"move_number": 24, "player": "YSv7", "position": [3, 1], "time": 0.0014848709106445312, "illegal": false, "llm_conversations": []}, {"move_number": 25, "player": "SZT4", "position": [4, 0], "time": 0.0019979476928710938, "illegal": false, "llm_conversations": []}, {"move_number": 26, "player": "YSv7", "position": [4, 1], "time": 0.0015048980712890625, "illegal": false, "llm_conversations": []}, {"move_number": 27, "player": "SZT4", "position": [1, 4], "time": 0.0020062923431396484, "illegal": false, "llm_conversations": []}, {"move_number": 28, "player": "YSv7", "position": [1, 5], "time": 0.4683384895324707, "illegal": false, "llm_conversations": [{"timestamp": 1755801536.3899024, "input": [{"role": "system", "content": "### Instruction:\nYou are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by 'O', and your opponent's pieces will be marked by 'X'.Your goal is to be the first to place 5 consecutive 'O' horiontally, vertically, or diagionally.\n\n### Strategy:\nBefore making any move, you must first analyze the board and apply these strategies.\n- Build intersecting forks with open ends from multiple directions.\n- Make use of diagonal attacks.\n- Take control of the center of the board.\n- Predict your opponent's moves, intercept, and surround them.\n\n### Response:\nRespond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.\n\n```json\n{\n    \"analysis\": \"<brief analysis of the board state>\",\n    \"strategy\": \"<which strategy you're applying>\",\n    \"move\": {\"row\": <row_number>, \"col\": <col_number>}\n}\n```"}, {"role": "user", "content": "Current board state:\n    0  1  2  3  4  5  6  7 \n 0  .  .  .  .  .  .  .  . \n 1  .  .  .  O  X  .  O  . \n 2  .  .  O  O  O  X  O  . \n 3  .  O  O  X  X  X  O  . \n 4  X  O  X  X  X  O  X  . \n 5  .  .  .  X  X  X  O  . \n 6  .  .  .  .  X  .  .  . \n 7  .  .  .  .  O  .  .  . \n\nYou are playing as: O\nYour last move was: (1, 4)\nYou can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,5), (1,7), (2,0), (2,1), (2,7), (3,0), (3,7), (4,7), (5,0), (5,1), (5,2), (5,7), (6,0), (6,1), (6,2), (6,3), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,5), (7,6), (7,7)\nConsider fork opportunities at: [(1, 5), (1, 2), (2, 1), (2, 7), (4, 7), (3, 7), (3, 0), (1, 7)]\nBest move in JSON: "}], "output": "```json\n{\n    \"analysis\": \"Fork opportunity at (1, 5) creates open ends in multiple directions.\",\n    \"strategy\": \"Forking\",\n    \"move\": {\n        \"row\": 1,\n        \"col\": 5\n    }\n}\n``` \n", "model": "gemma2-9b-it", "client_type": "OpenAIGomokuClient"}]}, {"move_number": 29, "player": "SZT4", "position": [5, 2], "time": 0.44899916648864746, "illegal": false, "llm_conversations": [{"timestamp": 1755801536.860247, "input": [{"role": "system", "content": "You are an expert Gomoku (Five-in-a-Row) player. The board is 0-indexed.\nGoal: make 5 in a row and prevent opponent from doing so.\n\nABSOLUTE PRIORITIES (apply in EXACT order each move):\n1) WIN: Complete 5-in-a-row immediately.\n2) BLOCK: If the opponent can complete 5-in-a-row next, block immediately.\n3) BLOCK EXISTING OPEN THREE: If opponent ALREADY has an open-three on board, block it.\n4) CREATE OPEN THREE: Make your own open-three.\n5) CREATE DOUBLE THREATS.\n6) IMPROVE POSITION: Extend your lines and control the center.\n\nHARD CONSTRAINTS:\n- Only place on '.'\n- Coordinates within [0..N-1]\n- Respond ONLY with a JSON object in ```json ... ```\n\nOUTPUT FORMAT:\n```json\n{\n  \"reasoning\": \"1\u20132 short sentences stating which rule you applied\",\n  \"move\": {\"row\": <int>, \"col\": <int>}\n}\n```"}, {"role": "user", "content": "Current board state:\n    0  1  2  3  4  5  6  7 \n 0  .  .  .  .  .  .  .  . \n 1  .  .  .  O  X  O  O  . \n 2  .  .  O  O  O  X  O  . \n 3  .  O  O  X  X  X  O  . \n 4  X  O  X  X  X  O  X  . \n 5  .  .  .  X  X  X  O  . \n 6  .  .  .  .  X  .  .  . \n 7  .  .  .  .  O  .  .  . \n\nCurrent player: X\nMove count: 28\nLast move: O at (1, 5)\n\n\nPlease provide your next move as JSON."}], "output": "```json\n{\n  \"reasoning\": \"Blocking opponent's open three on row 3\",\n  \"move\": {\"row\": 3, \"col\": 6}\n}\n``` \n", "model": "gemma2-9b-it", "client_type": "OpenAIGomokuClient"}]}, {"move_number": 30, "player": "YSv7", "position": [5, 1], "time": 0.0010063648223876953, "illegal": false, "llm_conversations": []}, {"move_number": 31, "player": "SZT4", "position": [6, 1], "time": 0.0, "illegal": false, "llm_conversations": []}];
+        const winningSequence = [[2, 5], [3, 4], [4, 3], [5, 2], [6, 1]];
+        let currentMove = 0;
+        let isPlaying = false;
+        let playInterval = null;
+        
+        function updateBoard() {
+            const board = boardStates[currentMove];
+            const highlights = currentMove === boardStates.length - 1 ? winningSequence : [];
+            
+            let html = '<table class="gomoku-board">';
+            html += '<tr><th></th>';
+            for (let col = 0; col < 8; col++) {
+                html += '<th>' + col + '</th>';
+            }
+            html += '</tr>';
+            
+            for (let row = 0; row < 8; row++) {
+                html += '<tr><th>' + row + '</th>';
+                for (let col = 0; col < 8; col++) {
+                    const piece = board[row][col];
+                    let cellClass = "cell";
+                    
+                    const isWinning = highlights.some(pos => pos[0] === row && pos[1] === col);
+                    if (isWinning) {
+                        cellClass += " winning";
+                    }
+                    
+                    if (piece === "X") {
+                        cellClass += " black";
+                    } else if (piece === "O") {
+                        cellClass += " white";
+                    }
+                    
+                    html += '<td class="' + cellClass + '" data-row="' + row + '" data-col="' + col + '">';
+                    if (piece !== ".") {
+                        html += piece;
+                    }
+                    html += '</td>';
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            
+            document.getElementById('board-display').innerHTML = html;
+            
+            // Update move info
+            document.getElementById('move-display').textContent = 'Move: ' + currentMove + ' / ' + (boardStates.length - 1);
+            
+            let currentPlayerText = "Game Start";
+            if (currentMove > 0) {
+                const move = moves[currentMove - 1];
+                if (move.illegal) {
+                    if (move.position === null) {
+                        currentPlayerText = `${move.player} - TIMEOUT (${move.reason || 'Unknown error'})`;
+                    } else {
+                        const row = move.position[0];
+                        const col = move.position[1];
+                        currentPlayerText = `${move.player} - ILLEGAL MOVE (${row}, ${col}) - ${move.reason || 'Invalid position'}`;
+                    }
+                } else {
+                    const row = move.position && move.position[0] !== undefined ? move.position[0] : 'unknown';
+                    const col = move.position && move.position[1] !== undefined ? move.position[1] : 'unknown';
+                    currentPlayerText = `${move.player} played (${row}, ${col})`;
+                }
+            }
+            document.getElementById('current-player').textContent = currentPlayerText;
+            
+            // Update button states
+            document.getElementById('first-btn').disabled = currentMove === 0 || isPlaying;
+            document.getElementById('prev-btn').disabled = currentMove === 0 || isPlaying;
+            document.getElementById('next-btn').disabled = currentMove === boardStates.length - 1 || isPlaying;
+            document.getElementById('last-btn').disabled = currentMove === boardStates.length - 1 || isPlaying;
+            
+            // Update move list
+            const moveItems = document.querySelectorAll('.move-item');
+            moveItems.forEach((item, index) => {
+                item.classList.toggle('current', index === currentMove);
+            });
+        }
+        
+        function goToMove(moveIndex) {
+            currentMove = Math.max(0, Math.min(boardStates.length - 1, moveIndex));
+            updateBoard();
+        }
+        
+        function nextMove() {
+            if (currentMove < boardStates.length - 1) {
+                currentMove++;
+                updateBoard();
+            }
+        }
+        
+        function previousMove() {
+            if (currentMove > 0) {
+                currentMove--;
+                updateBoard();
+            }
+        }
+        
+        function toggleAutoPlay() {
+            if (isPlaying) {
+                stopAutoPlay();
+            } else {
+                startAutoPlay();
+            }
+        }
+        
+        function startAutoPlay() {
+            if (currentMove >= boardStates.length - 1) {
+                currentMove = 0; // Reset to beginning if at end
+            }
+            
+            isPlaying = true;
+            document.getElementById('play-btn').textContent = '⏸️ Pause';
+            updateBoard();
+            
+            playInterval = setInterval(() => {
+                if (currentMove < boardStates.length - 1) {
+                    currentMove++;
+                    updateBoard();
+                } else {
+                    stopAutoPlay();
+                }
+            }, 1000); // 1 second between moves
+        }
+        
+        function stopAutoPlay() {
+            isPlaying = false;
+            document.getElementById('play-btn').textContent = '▶️ Play';
+            if (playInterval) {
+                clearInterval(playInterval);
+                playInterval = null;
+            }
+            updateBoard();
+        }
+        
+        function toggleLLMConversation(elementId) {
+            const element = document.getElementById(elementId);
+            if (element.style.display === 'none') {
+                element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (isPlaying && e.key !== ' ') return; // Only allow spacebar when playing
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                    previousMove();
+                    break;
+                case 'ArrowRight':
+                    nextMove();
+                    break;
+                case 'Home':
+                    goToMove(0);
+                    break;
+                case 'End':
+                    goToMove(boardStates.length - 1);
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    toggleAutoPlay();
+                    break;
+            }
+        });
+        
+        // Initialize
+        updateBoard();
+    </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+    "name": "SZT4",
+    "agent_class": "gomoku_agent.SZT4", 
+    "author": "szgan001",
+    "description": "A prompt-based LLM-powered agent that plays the game of Gomoku on a 8x8 board.",
+    "version": "4.0"
+}

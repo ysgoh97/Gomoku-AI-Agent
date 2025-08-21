@@ -1,0 +1,568 @@
+{
+  "game_metadata": {
+    "agent1": "gomoku_agent.SZT4:SZT4",
+    "agent2": "gomoku_agent.YSV7:YSv7",
+    "board_size": 8,
+    "time_limit": 30.0,
+    "timestamp": 1755801537.308256
+  },
+  "game_result": {
+    "winner": "SZT4",
+    "loser": "YSv7",
+    "result": "black_win",
+    "result_code": "BW",
+    "reason": "Five in a row",
+    "moves": 31,
+    "game_log": [
+      {
+        "move_number": 1,
+        "player": "SZT4",
+        "position": [
+          4,
+          4
+        ],
+        "time": 0.0035276412963867188,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 2,
+        "player": "YSv7",
+        "position": [
+          4,
+          5
+        ],
+        "time": 0.8825647830963135,
+        "illegal": false,
+        "llm_conversations": [
+          {
+            "timestamp": 1755801534.1018116,
+            "input": [
+              {
+                "role": "system",
+                "content": "### Instruction:\nYou are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by 'O', and your opponent's pieces will be marked by 'X'.Your goal is to be the first to place 5 consecutive 'O' horiontally, vertically, or diagionally.\n\n### Strategy:\nBefore making any move, you must first analyze the board and apply these strategies.\n- Build intersecting forks with open ends from multiple directions.\n- Make use of diagonal attacks.\n- Take control of the center of the board.\n- Predict your opponent's moves, intercept, and surround them.\n\n### Response:\nRespond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.\n\n```json\n{\n    \"analysis\": \"<brief analysis of the board state>\",\n    \"strategy\": \"<which strategy you're applying>\",\n    \"move\": {\"row\": <row_number>, \"col\": <col_number>}\n}\n```"
+              },
+              {
+                "role": "user",
+                "content": "Current board state:\n    0  1  2  3  4  5  6  7 \n 0  .  .  .  .  .  .  .  . \n 1  .  .  .  .  .  .  .  . \n 2  .  .  .  .  .  .  .  . \n 3  .  .  .  .  .  .  .  . \n 4  .  .  .  .  X  .  .  . \n 5  .  .  .  .  .  .  .  . \n 6  .  .  .  .  .  .  .  . \n 7  .  .  .  .  .  .  .  . \n\nYou are playing as: O\nYour last move was: (4, 4)\nYou can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7), (2,0), (2,1), (2,2), (2,3), (2,4), (2,5), (2,6), (2,7), (3,0), (3,1), (3,2), (3,3), (3,4), (3,5), (3,6), (3,7), (4,0), (4,1), (4,2), (4,3), (4,5), (4,6), (4,7), (5,0), (5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), (6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,4), (7,5), (7,6), (7,7)\nBest move in JSON: "
+              }
+            ],
+            "output": "```json\n{\n    \"analysis\": \"Center control is open, allowing for potential forks and diagonal attacks.\",\n    \"strategy\": \"Center control\",\n    \"move\": {\"row\": 4, \"col\": 5}\n}\n``` \n",
+            "model": "gemma2-9b-it",
+            "client_type": "OpenAIGomokuClient"
+          }
+        ]
+      },
+      {
+        "move_number": 3,
+        "player": "SZT4",
+        "position": [
+          3,
+          3
+        ],
+        "time": 0.001996278762817383,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 4,
+        "player": "YSv7",
+        "position": [
+          3,
+          2
+        ],
+        "time": 0.46449971199035645,
+        "illegal": false,
+        "llm_conversations": [
+          {
+            "timestamp": 1755801534.9868753,
+            "input": [
+              {
+                "role": "system",
+                "content": "### Instruction:\nYou are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by 'O', and your opponent's pieces will be marked by 'X'.Your goal is to be the first to place 5 consecutive 'O' horiontally, vertically, or diagionally.\n\n### Strategy:\nBefore making any move, you must first analyze the board and apply these strategies.\n- Build intersecting forks with open ends from multiple directions.\n- Make use of diagonal attacks.\n- Take control of the center of the board.\n- Predict your opponent's moves, intercept, and surround them.\n\n### Response:\nRespond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.\n\n```json\n{\n    \"analysis\": \"<brief analysis of the board state>\",\n    \"strategy\": \"<which strategy you're applying>\",\n    \"move\": {\"row\": <row_number>, \"col\": <col_number>}\n}\n```"
+              },
+              {
+                "role": "user",
+                "content": "Current board state:\n    0  1  2  3  4  5  6  7 \n 0  .  .  .  .  .  .  .  . \n 1  .  .  .  .  .  .  .  . \n 2  .  .  .  .  .  .  .  . \n 3  .  .  .  X  .  .  .  . \n 4  .  .  .  .  X  O  .  . \n 5  .  .  .  .  .  .  .  . \n 6  .  .  .  .  .  .  .  . \n 7  .  .  .  .  .  .  .  . \n\nYou are playing as: O\nYour last move was: (3, 3)\nYou can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7), (2,0), (2,1), (2,2), (2,3), (2,4), (2,5), (2,6), (2,7), (3,0), (3,1), (3,2), (3,4), (3,5), (3,6), (3,7), (4,0), (4,1), (4,2), (4,3), (4,6), (4,7), (5,0), (5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), (6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,4), (7,5), (7,6), (7,7)\nBest move in JSON: "
+              }
+            ],
+            "output": "```json\n{\n    \"analysis\": \"Opponent has a potential diagonal attack, intercepting it is crucial.\",\n    \"strategy\": \"Intercepting opponent's attack\",\n    \"move\": {\"row\": 3, \"col\": 2}\n}\n```",
+            "model": "gemma2-9b-it",
+            "client_type": "OpenAIGomokuClient"
+          }
+        ]
+      },
+      {
+        "move_number": 5,
+        "player": "SZT4",
+        "position": [
+          3,
+          5
+        ],
+        "time": 0.0020067691802978516,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 6,
+        "player": "YSv7",
+        "position": [
+          3,
+          6
+        ],
+        "time": 0.44421911239624023,
+        "illegal": false,
+        "llm_conversations": [
+          {
+            "timestamp": 1755801535.4543827,
+            "input": [
+              {
+                "role": "system",
+                "content": "### Instruction:\nYou are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by 'O', and your opponent's pieces will be marked by 'X'.Your goal is to be the first to place 5 consecutive 'O' horiontally, vertically, or diagionally.\n\n### Strategy:\nBefore making any move, you must first analyze the board and apply these strategies.\n- Build intersecting forks with open ends from multiple directions.\n- Make use of diagonal attacks.\n- Take control of the center of the board.\n- Predict your opponent's moves, intercept, and surround them.\n\n### Response:\nRespond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.\n\n```json\n{\n    \"analysis\": \"<brief analysis of the board state>\",\n    \"strategy\": \"<which strategy you're applying>\",\n    \"move\": {\"row\": <row_number>, \"col\": <col_number>}\n}\n```"
+              },
+              {
+                "role": "user",
+                "content": "Current board state:\n    0  1  2  3  4  5  6  7 \n 0  .  .  .  .  .  .  .  . \n 1  .  .  .  .  .  .  .  . \n 2  .  .  .  .  .  .  .  . \n 3  .  .  O  X  .  X  .  . \n 4  .  .  .  .  X  O  .  . \n 5  .  .  .  .  .  .  .  . \n 6  .  .  .  .  .  .  .  . \n 7  .  .  .  .  .  .  .  . \n\nYou are playing as: O\nYour last move was: (3, 5)\nYou can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7), (2,0), (2,1), (2,2), (2,3), (2,4), (2,5), (2,6), (2,7), (3,0), (3,1), (3,4), (3,6), (3,7), (4,0), (4,1), (4,2), (4,3), (4,6), (4,7), (5,0), (5,1), (5,2), (5,3), (5,4), (5,5), (5,6), (5,7), (6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,4), (7,5), (7,6), (7,7)\nBest move in JSON: "
+              }
+            ],
+            "output": "```json\n{\n    \"analysis\": \"Opportunity to create a diagonal fork.\",\n    \"strategy\": \"Diagonal attack\",\n    \"move\": {\"row\": 3, \"col\": 6}\n}\n```",
+            "model": "gemma2-9b-it",
+            "client_type": "OpenAIGomokuClient"
+          }
+        ]
+      },
+      {
+        "move_number": 7,
+        "player": "SZT4",
+        "position": [
+          5,
+          3
+        ],
+        "time": 0.003002643585205078,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 8,
+        "player": "YSv7",
+        "position": [
+          2,
+          6
+        ],
+        "time": 0.0015015602111816406,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 9,
+        "player": "SZT4",
+        "position": [
+          5,
+          5
+        ],
+        "time": 0.002005338668823242,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 10,
+        "player": "YSv7",
+        "position": [
+          2,
+          2
+        ],
+        "time": 0.0010039806365966797,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 11,
+        "player": "SZT4",
+        "position": [
+          4,
+          3
+        ],
+        "time": 0.002496004104614258,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 12,
+        "player": "YSv7",
+        "position": [
+          2,
+          3
+        ],
+        "time": 0.0010027885437011719,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 13,
+        "player": "SZT4",
+        "position": [
+          5,
+          4
+        ],
+        "time": 0.0030019283294677734,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 14,
+        "player": "YSv7",
+        "position": [
+          5,
+          6
+        ],
+        "time": 0.0015015602111816406,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 15,
+        "player": "SZT4",
+        "position": [
+          3,
+          4
+        ],
+        "time": 0.0020029544830322266,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 16,
+        "player": "YSv7",
+        "position": [
+          2,
+          4
+        ],
+        "time": 0.0010001659393310547,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 17,
+        "player": "SZT4",
+        "position": [
+          2,
+          5
+        ],
+        "time": 0.0005021095275878906,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 18,
+        "player": "YSv7",
+        "position": [
+          1,
+          6
+        ],
+        "time": 0.0010027885437011719,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 19,
+        "player": "SZT4",
+        "position": [
+          4,
+          6
+        ],
+        "time": 0.0,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 20,
+        "player": "YSv7",
+        "position": [
+          1,
+          3
+        ],
+        "time": 0.45577359199523926,
+        "illegal": false,
+        "llm_conversations": [
+          {
+            "timestamp": 1755801535.9196277,
+            "input": [
+              {
+                "role": "system",
+                "content": "### Instruction:\nYou are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by 'O', and your opponent's pieces will be marked by 'X'.Your goal is to be the first to place 5 consecutive 'O' horiontally, vertically, or diagionally.\n\n### Strategy:\nBefore making any move, you must first analyze the board and apply these strategies.\n- Build intersecting forks with open ends from multiple directions.\n- Make use of diagonal attacks.\n- Take control of the center of the board.\n- Predict your opponent's moves, intercept, and surround them.\n\n### Response:\nRespond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.\n\n```json\n{\n    \"analysis\": \"<brief analysis of the board state>\",\n    \"strategy\": \"<which strategy you're applying>\",\n    \"move\": {\"row\": <row_number>, \"col\": <col_number>}\n}\n```"
+              },
+              {
+                "role": "user",
+                "content": "Current board state:\n    0  1  2  3  4  5  6  7 \n 0  .  .  .  .  .  .  .  . \n 1  .  .  .  .  .  .  O  . \n 2  .  .  O  O  O  X  O  . \n 3  .  .  O  X  X  X  O  . \n 4  .  .  .  X  X  O  X  . \n 5  .  .  .  X  X  X  O  . \n 6  .  .  .  .  .  .  .  . \n 7  .  .  .  .  .  .  .  . \n\nYou are playing as: O\nYour last move was: (4, 6)\nYou can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,3), (1,4), (1,5), (1,7), (2,0), (2,1), (2,7), (3,0), (3,1), (3,7), (4,0), (4,1), (4,2), (4,7), (5,0), (5,1), (5,2), (5,7), (6,0), (6,1), (6,2), (6,3), (6,4), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,4), (7,5), (7,6), (7,7)\nConsider fork opportunities at: [(1, 3), (1, 5), (2, 7), (1, 4), (4, 7), (3, 1), (3, 7), (1, 2), (2, 1), (1, 7)]\nBest move in JSON: "
+              }
+            ],
+            "output": "```json\n{\n    \"analysis\": \"Building a fork with open ends on the diagonal.\",\n    \"strategy\": \"Fork\",\n    \"move\": {\"row\": 1, \"col\": 3}\n}\n``` \n",
+            "model": "gemma2-9b-it",
+            "client_type": "OpenAIGomokuClient"
+          }
+        ]
+      },
+      {
+        "move_number": 21,
+        "player": "SZT4",
+        "position": [
+          6,
+          4
+        ],
+        "time": 0.0035092830657958984,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 22,
+        "player": "YSv7",
+        "position": [
+          7,
+          4
+        ],
+        "time": 0.0019996166229248047,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 23,
+        "player": "SZT4",
+        "position": [
+          4,
+          2
+        ],
+        "time": 0.0019996166229248047,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 24,
+        "player": "YSv7",
+        "position": [
+          3,
+          1
+        ],
+        "time": 0.0014848709106445312,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 25,
+        "player": "SZT4",
+        "position": [
+          4,
+          0
+        ],
+        "time": 0.0019979476928710938,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 26,
+        "player": "YSv7",
+        "position": [
+          4,
+          1
+        ],
+        "time": 0.0015048980712890625,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 27,
+        "player": "SZT4",
+        "position": [
+          1,
+          4
+        ],
+        "time": 0.0020062923431396484,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 28,
+        "player": "YSv7",
+        "position": [
+          1,
+          5
+        ],
+        "time": 0.4683384895324707,
+        "illegal": false,
+        "llm_conversations": [
+          {
+            "timestamp": 1755801536.3899024,
+            "input": [
+              {
+                "role": "system",
+                "content": "### Instruction:\nYou are an expert Gomoku player.You will be playing on a 8x8 board where rows and columns are indexed 0 to 7.Your pieces will be marked by 'O', and your opponent's pieces will be marked by 'X'.Your goal is to be the first to place 5 consecutive 'O' horiontally, vertically, or diagionally.\n\n### Strategy:\nBefore making any move, you must first analyze the board and apply these strategies.\n- Build intersecting forks with open ends from multiple directions.\n- Make use of diagonal attacks.\n- Take control of the center of the board.\n- Predict your opponent's moves, intercept, and surround them.\n\n### Response:\nRespond with a valid JSON using a ```json wrapper.Do not output any intermediate thinking, explanation, or additional remark.\n\n```json\n{\n    \"analysis\": \"<brief analysis of the board state>\",\n    \"strategy\": \"<which strategy you're applying>\",\n    \"move\": {\"row\": <row_number>, \"col\": <col_number>}\n}\n```"
+              },
+              {
+                "role": "user",
+                "content": "Current board state:\n    0  1  2  3  4  5  6  7 \n 0  .  .  .  .  .  .  .  . \n 1  .  .  .  O  X  .  O  . \n 2  .  .  O  O  O  X  O  . \n 3  .  O  O  X  X  X  O  . \n 4  X  O  X  X  X  O  X  . \n 5  .  .  .  X  X  X  O  . \n 6  .  .  .  .  X  .  .  . \n 7  .  .  .  .  O  .  .  . \n\nYou are playing as: O\nYour last move was: (1, 4)\nYou can make moves at: (0,0), (0,1), (0,2), (0,3), (0,4), (0,5), (0,6), (0,7), (1,0), (1,1), (1,2), (1,5), (1,7), (2,0), (2,1), (2,7), (3,0), (3,7), (4,7), (5,0), (5,1), (5,2), (5,7), (6,0), (6,1), (6,2), (6,3), (6,5), (6,6), (6,7), (7,0), (7,1), (7,2), (7,3), (7,5), (7,6), (7,7)\nConsider fork opportunities at: [(1, 5), (1, 2), (2, 1), (2, 7), (4, 7), (3, 7), (3, 0), (1, 7)]\nBest move in JSON: "
+              }
+            ],
+            "output": "```json\n{\n    \"analysis\": \"Fork opportunity at (1, 5) creates open ends in multiple directions.\",\n    \"strategy\": \"Forking\",\n    \"move\": {\n        \"row\": 1,\n        \"col\": 5\n    }\n}\n``` \n",
+            "model": "gemma2-9b-it",
+            "client_type": "OpenAIGomokuClient"
+          }
+        ]
+      },
+      {
+        "move_number": 29,
+        "player": "SZT4",
+        "position": [
+          5,
+          2
+        ],
+        "time": 0.44899916648864746,
+        "illegal": false,
+        "llm_conversations": [
+          {
+            "timestamp": 1755801536.860247,
+            "input": [
+              {
+                "role": "system",
+                "content": "You are an expert Gomoku (Five-in-a-Row) player. The board is 0-indexed.\nGoal: make 5 in a row and prevent opponent from doing so.\n\nABSOLUTE PRIORITIES (apply in EXACT order each move):\n1) WIN: Complete 5-in-a-row immediately.\n2) BLOCK: If the opponent can complete 5-in-a-row next, block immediately.\n3) BLOCK EXISTING OPEN THREE: If opponent ALREADY has an open-three on board, block it.\n4) CREATE OPEN THREE: Make your own open-three.\n5) CREATE DOUBLE THREATS.\n6) IMPROVE POSITION: Extend your lines and control the center.\n\nHARD CONSTRAINTS:\n- Only place on '.'\n- Coordinates within [0..N-1]\n- Respond ONLY with a JSON object in ```json ... ```\n\nOUTPUT FORMAT:\n```json\n{\n  \"reasoning\": \"1\u20132 short sentences stating which rule you applied\",\n  \"move\": {\"row\": <int>, \"col\": <int>}\n}\n```"
+              },
+              {
+                "role": "user",
+                "content": "Current board state:\n    0  1  2  3  4  5  6  7 \n 0  .  .  .  .  .  .  .  . \n 1  .  .  .  O  X  O  O  . \n 2  .  .  O  O  O  X  O  . \n 3  .  O  O  X  X  X  O  . \n 4  X  O  X  X  X  O  X  . \n 5  .  .  .  X  X  X  O  . \n 6  .  .  .  .  X  .  .  . \n 7  .  .  .  .  O  .  .  . \n\nCurrent player: X\nMove count: 28\nLast move: O at (1, 5)\n\n\nPlease provide your next move as JSON."
+              }
+            ],
+            "output": "```json\n{\n  \"reasoning\": \"Blocking opponent's open three on row 3\",\n  \"move\": {\"row\": 3, \"col\": 6}\n}\n``` \n",
+            "model": "gemma2-9b-it",
+            "client_type": "OpenAIGomokuClient"
+          }
+        ]
+      },
+      {
+        "move_number": 30,
+        "player": "YSv7",
+        "position": [
+          5,
+          1
+        ],
+        "time": 0.0010063648223876953,
+        "illegal": false,
+        "llm_conversations": []
+      },
+      {
+        "move_number": 31,
+        "player": "SZT4",
+        "position": [
+          6,
+          1
+        ],
+        "time": 0.0,
+        "illegal": false,
+        "llm_conversations": []
+      }
+    ],
+    "final_board": [
+      [
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "."
+      ],
+      [
+        ".",
+        ".",
+        ".",
+        "O",
+        "X",
+        "O",
+        "O",
+        "."
+      ],
+      [
+        ".",
+        ".",
+        "O",
+        "O",
+        "O",
+        "X",
+        "O",
+        "."
+      ],
+      [
+        ".",
+        "O",
+        "O",
+        "X",
+        "X",
+        "X",
+        "O",
+        "."
+      ],
+      [
+        "X",
+        "O",
+        "X",
+        "X",
+        "X",
+        "O",
+        "X",
+        "."
+      ],
+      [
+        ".",
+        "O",
+        "X",
+        "X",
+        "X",
+        "X",
+        "O",
+        "."
+      ],
+      [
+        ".",
+        "X",
+        ".",
+        ".",
+        "X",
+        ".",
+        ".",
+        "."
+      ],
+      [
+        ".",
+        ".",
+        ".",
+        ".",
+        "O",
+        ".",
+        ".",
+        "."
+      ]
+    ],
+    "move_history": "1. Black(X): (4, 4)\n2. White(O): (4, 5)\n3. Black(X): (3, 3)\n4. White(O): (3, 2)\n5. Black(X): (3, 5)\n6. White(O): (3, 6)\n7. Black(X): (5, 3)\n8. White(O): (2, 6)\n9. Black(X): (5, 5)\n10. White(O): (2, 2)\n11. Black(X): (4, 3)\n12. White(O): (2, 3)\n13. Black(X): (5, 4)\n14. White(O): (5, 6)\n15. Black(X): (3, 4)\n16. White(O): (2, 4)\n17. Black(X): (2, 5)\n18. White(O): (1, 6)\n19. Black(X): (4, 6)\n20. White(O): (1, 3)\n21. Black(X): (6, 4)\n22. White(O): (7, 4)\n23. Black(X): (4, 2)\n24. White(O): (3, 1)\n25. Black(X): (4, 0)\n26. White(O): (4, 1)\n27. Black(X): (1, 4)\n28. White(O): (1, 5)\n29. Black(X): (5, 2)\n30. White(O): (5, 1)\n31. Black(X): (6, 1)",
+    "total_time": 3.212972402572632,
+    "winning_sequence": [
+      [
+        2,
+        5
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        6,
+        1
+      ]
+    ]
+  }
+}

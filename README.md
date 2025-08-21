@@ -11,16 +11,22 @@ The AI agent will:
 2. Return the next move (row, column) as a valid coordinate in JSON format.
 
 ## Files
-- `agent.json` - Agent configuration file
-- `gomoku_agent.py` - Main agent implementation
 
-## TODO
-- Try other models
-- Threats should be ._xxx.  .xx_x. instead of .xxx.
-- Get attack move, e.g. forks opportunities 
-- Rank moves by number of surrounding pieces 
+```
+.
+├── agent1                 
+│   ├── agent.json          <-  Agent 1 configuration file
+│   └── gomoku_agent.py     <-  Agent 1 implementation
+├── agent2                  
+│   ├── agent.json          <-  Agent 2 configuration file
+│   └── gomoku_agent.py     <-  Agent 2 implementation
+├── runs                    <-  Match history visualization
+├── arena.ipynb             <-  Arena (agent1 v.s. agent2)
+└── secrets.json            <-  Define OPENAI_API_KEY and OPENAI_BASE_URL
+
+```
 
 ## Contributors
-- [momo419685](https://github.com/momo419685) - mochenhuang.2024@mitb.smu.edu.sg
-- [szgan001](https://github.com/szgan001) - sengzhangan.20244@mitb.smu.edu.sg
-- [ysgoh97](https://github.com/ysgoh97) - yunsi.goh.20244@mitb.smu.edu.sg
+- [ysgoh97](https://github.com/ysgoh97) 
+- [szgan001](https://github.com/szgan001) 
+- [momo419685](https://github.com/momo419685)

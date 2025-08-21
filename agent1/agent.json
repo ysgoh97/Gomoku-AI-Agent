@@ -1,0 +1,7 @@
+{
+    "name": "YSV7",
+    "agent_class": "gomoku_agent.YSV7", 
+    "author": "ysgoh97",
+    "description": "A prompt-based LLM-powered agent that plays the game of Gomoku on a 8x8 board.",
+    "version": "7.6"
+}
